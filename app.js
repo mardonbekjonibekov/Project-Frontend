@@ -870,7 +870,7 @@ document.querySelector("[data-open-cart]").addEventListener("click", async () =>
 });
 
 document.querySelector("[data-open-login]").addEventListener("click", () => {
-  openModal(loginModal);
+  window.location.href = "https://project-backend-yuym.onrender.com/admin/";
 });
 
 document.querySelector("[data-clear-cart]").addEventListener("click", async () => {
