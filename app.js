@@ -350,7 +350,7 @@
 // await loadPage("events");
 
 
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = "https://project-backend-yuym.onrender.com/api";
 
 const pages = {
   events: {
