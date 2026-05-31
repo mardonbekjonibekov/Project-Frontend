@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lookingglass Theatre Purchase</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <button class="logo" type="button" data-page="events" aria-label="Lookingglass events">
+        lookingglass
+      </button>
+      <div class="header-actions">
+        <button class="menu-button" type="button" data-toggle-nav aria-expanded="false" aria-controls="primary-nav">
+          Menu
+        </button>
+        <button class="header-link" type="button" data-open-login>
+          <span aria-hidden="true">↪</span>
+          <span>Login</span>
+        </button>
+        <button class="header-link" type="button" data-open-cart>
+          <span aria-hidden="true">▱</span>
+          <span>Cart: <strong data-cart-count>0</strong> $<strong data-cart-total>0.00</strong></span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="main-nav" id="primary-nav" aria-label="Primary">
+      <button class="active" type="button" data-page="events">Events</button>
+      <button type="button" data-page="gift-certificates">Gift Certificates</button>
+      <button type="button" data-page="monthly-giving">Monthly Giving</button>
+      <button type="button" data-page="donate-now">Donate Now</button>
+    </nav>
+
+    <main class="content" id="app" tabindex="-1">
+      <section class="loading-state">Loading...</section>
+    </main>
+
+    <footer class="site-footer">
+      <button type="button" data-info="privacy">Privacy Policy</button>
+      <button type="button" data-info="terms">Terms &amp; Conditions</button>
+      <button type="button" data-info="email">Join Our Email List</button>
+    </footer>
+
+    <dialog class="modal" data-login-modal>
+      <form method="dialog" class="modal-panel">
+        <button class="close-button" type="button" data-close-modal aria-label="Close login">×</button>
+        <h2>Login</h2>
+        <p class="muted">Ownerlar uchun kontent boshqaruvi Django Unfold admin panelida.</p>
+        <a class="primary wide" href="http://localhost:8000/admin/">Open Admin Panel</a>
+      </form>
+    </dialog>
+
+    <dialog class="modal" data-cart-modal>
+      <form method="dialog" class="modal-panel">
+        <button class="close-button" type="button" data-close-modal aria-label="Close cart">×</button>
+        <h2>Cart</h2>
+        <div data-cart-items class="cart-items">Your cart is empty.</div>
+        <div class="cart-footer">
+          <button class="secondary" type="button" data-clear-cart>Clear Cart</button>
+          <button class="primary" type="button" data-close-modal>Continue</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal event-modal" data-event-modal>
+      <form method="dialog" class="modal-panel">
+        <button class="close-button" type="button" data-close-modal aria-label="Close event details">×</button>
+        <div class="event-detail">
+          <p class="modal-eyebrow">Select Tickets</p>
+          <h2 data-event-title></h2>
+          <p class="date" data-event-date></p>
+          <p class="muted" data-event-description></p>
+          <label class="select-row">
+            Performance
+            <select data-performance-select>
+              <option value="preview">Preview performance</option>
+              <option value="evening">Evening performance</option>
+              <option value="matinee">Matinee performance</option>
+            </select>
+          </label>
+          <label class="select-row">
+            Tickets
+            <input data-ticket-quantity type="number" min="1" max="10" value="1">
+          </label>
+          <button class="primary wide" type="button" data-confirm-event>Add to Cart</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal" data-info-modal>
+      <form method="dialog" class="modal-panel">
+        <button class="close-button" type="button" data-close-modal aria-label="Close information">×</button>
+        <h2 data-info-title></h2>
+        <p class="muted" data-info-body></p>
+        <button class="primary wide" type="button" data-close-modal>Close</button>
+      </form>
+    </dialog>
+
+    <template id="event-card-template">
+      <article class="event-card">
+        <div class="event-art"></div>
+        <button class="book-button" type="button">Book Now</button>
+        <div class="event-body">
+          <h2></h2>
+          <p class="date"></p>
+          <p class="description"></p>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
