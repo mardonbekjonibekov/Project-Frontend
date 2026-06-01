@@ -1,356 +1,8 @@
-// const API_BASE = "http://127.0.0.1:8000/api";
-
-// const pages = {
-//   events: {
-//     title: "Events",
-//     endpoint: "/events/",
-//     renderer: renderEvents
-//   },
-//   "gift-certificates": {
-//     title: "Gift Certificates",
-//     endpoint: "/gift-certificates/",
-//     renderer: (items) => renderStorePage("Gift Certificates", items, "Add to Cart", "gift_certificate")
-//   },
-//   "monthly-giving": {
-//     title: "Monthly Giving",
-//     endpoint: "/monthly-giving/",
-//     renderer: (items) => renderStorePage("Monthly Giving", items, "Add Monthly Gift", "monthly_giving")
-//   },
-//   "donate-now": {
-//     title: "Donate Now",
-//     endpoint: "/donate-now/",
-//     renderer: (items) => renderStorePage("Donate Now", items, "Donate", "donation")
-//   }
-// };
-
-// const state = {
-//   page: "events",
-//   cart: { items: [], count: 0, total: "0.00" },
-//   selectedEvent: null
-// };
-
-
-
-// const app = document.querySelector("#app");
-// const cartModal = document.querySelector("[data-cart-modal]");
-// const loginModal = document.querySelector("[data-login-modal]");
-// const eventModal = document.querySelector("[data-event-modal]");
-// const infoModal = document.querySelector("[data-info-modal]");
-// const mainNav = document.querySelector("#primary-nav");
-// const cartItemsNode = document.querySelector("[data-cart-items]");
-// const countNode = document.querySelector("[data-cart-count]");
-// const totalNode = document.querySelector("[data-cart-total]");
-// const ticketQuantityNode = document.querySelector("[data-ticket-quantity]");
-// const infoContent = {
-//   privacy: {
-//     title: "Privacy Policy",
-//     body: "Your contact and order information is used to manage Lookingglass Theatre purchases, gifts, donations, and owner follow-up inside the admin panel."
-//   },
-//   terms: {
-//     title: "Terms & Conditions",
-//     body: "All ticket, gift certificate, monthly giving, and donation selections are saved to the cart for review. Payment is intentionally disabled in this local build."
-//   },
-//   email: {
-//     title: "Join Our Email List",
-//     body: "Email signup is represented here as an information action. Site ownerlar email matnlarini va kampaniyalarni admin panel orqali boshqarishi mumkin."
-//   }
-// };
-
-// const money = new Intl.NumberFormat("en-US", {
-//   style: "currency",
-//   currency: "USD"
-// });
-
-// async function apiFetch(path, options = {}) {
-//   const response = await fetch(`${API_BASE}${path}`, {
-//     credentials: "include",
-//     headers: {
-//       "Content-Type": "application/json",
-//       ...(options.headers || {})
-//     },
-//     ...options
-//   });
-
-//   if (!response.ok) {
-//     throw new Error(`Request failed: ${response.status}`);
-//   }
-
-//   if (response.status === 204) {
-//     return null;
-//   }
-
-//   return response.json();
-// }
-
-// function setActiveNav(page) {
-//   document.querySelectorAll("[data-page]").forEach((button) => {
-//     button.classList.toggle("active", button.dataset.page === page);
-//   });
-//   closeMobileNav();
-// }
-
-// function heading(title) {
-//   const h1 = document.createElement("h1");
-//   h1.className = "page-heading";
-//   h1.textContent = title;
-//   return h1;
-// }
-
-// function truncate(text, maxLength = 112) {
-//   if (!text || text.length <= maxLength) {
-//     return text || "";
-//   }
-//   return `${text.slice(0, maxLength).trim()}... Read more`;
-// }
-
-// function openModal(modal) {
-//   if (typeof modal.showModal === "function") {
-//     modal.showModal();
-//     return;
-//   }
-//   modal.setAttribute("open", "");
-// }
-
-// function closeModal(modal) {
-//   if (typeof modal.close === "function") {
-//     modal.close();
-//     return;
-//   }
-//   modal.removeAttribute("open");
-// }
-
-// function renderEvents(events) {
-//   app.replaceChildren();
-//   app.append(heading("Events"));
-
-//   const grid = document.createElement("section");
-//   grid.className = "event-grid";
-//   grid.setAttribute("aria-label", "Current events");
-
-//   const template = document.querySelector("#event-card-template");
-//   events.forEach((event) => {
-//     const fragment = template.content.cloneNode(true);
-//     const card = fragment.querySelector(".event-card");
-//     const art = fragment.querySelector(".event-art");
-//     const button = fragment.querySelector(".book-button");
-//     art.classList.add(event.visual_style || "vampire");
-//     if (event.visual_style === "vampire") {
-//       art.innerHTML = "<span>Untitled</span><span>Vampire Play</span>";
-//     }
-//     button.textContent = event.button_label || "Book Now";
-//     button.addEventListener("click", () => openEventModal(event));
-//     card.querySelector("h2").textContent = event.title;
-//     card.querySelector(".date").textContent = event.date_range;
-//     const description = card.querySelector(".description");
-//     description.textContent = truncate(event.short_description);
-//     description.tabIndex = 0;
-//     description.setAttribute("role", "button");
-//     description.addEventListener("click", () => openEventModal(event));
-//     description.addEventListener("keydown", (keyboardEvent) => {
-//       if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") {
-//         keyboardEvent.preventDefault();
-//         openEventModal(event);
-//       }
-//     });
-//     grid.append(card);
-//   });
-
-//   app.append(grid);
-// }
-
-// function renderStorePage(title, items, buttonLabel, itemType) {
-//   app.replaceChildren();
-//   app.append(heading(title));
-
-//   const grid = document.createElement("section");
-//   grid.className = "store-grid";
-//   grid.setAttribute("aria-label", title);
-
-//   items.forEach((item) => {
-//     const card = document.createElement("article");
-//     card.className = "store-card";
-
-//     const cardTitle = document.createElement("h2");
-//     cardTitle.textContent = item.title || item.name;
-
-//     const price = document.createElement("div");
-//     price.className = "price";
-//     price.textContent = money.format(Number(item.amount));
-
-//     const description = document.createElement("p");
-//     description.textContent = item.description;
-
-//     const button = document.createElement("button");
-//     button.className = "primary";
-//     button.type = "button";
-//     button.textContent = buttonLabel;
-//     button.addEventListener("click", () => addStoreItemToCart(item, itemType));
-
-//     card.append(cardTitle, price, description, button);
-//     grid.append(card);
-//   });
-
-//   app.append(grid);
-// }
-
-// async function loadPage(page) {
-//   state.page = page;
-//   setActiveNav(page);
-//   app.innerHTML = '<section class="loading-state">Loading...</section>';
-
-//   try {
-//     const config = pages[page];
-//     const data = await apiFetch(config.endpoint);
-//     config.renderer(data);
-//     app.focus();
-//   } catch (error) {
-//     app.innerHTML = '<section class="error-state">Could not load this page. Please make sure the backend is running.</section>';
-//   }
-// }
-
-// async function loadCart() {
-//   try {
-//     state.cart = await apiFetch("/cart/");
-//   } catch (error) {
-//     state.cart = { items: [], count: 0, total: "0.00" };
-//   }
-//   renderCart();
-// }
-
-// function renderCart() {
-//   countNode.textContent = String(state.cart.count || 0);
-//   totalNode.textContent = Number(state.cart.total || 0).toFixed(2);
-
-//   if (!state.cart.items || state.cart.items.length === 0) {
-//     cartItemsNode.textContent = "Your cart is empty.";
-//     return;
-//   }
-
-//   cartItemsNode.replaceChildren(
-//     ...state.cart.items.map((item) => {
-//       const line = document.createElement("div");
-//       line.className = "cart-line";
-
-//       const title = document.createElement("div");
-//       title.className = "cart-line-title";
-//       title.textContent = item.label || item.item_name || item.event?.title;
-
-//       const meta = document.createElement("div");
-//       meta.textContent = `${item.quantity} x ${money.format(Number(item.unit_price))}`;
-
-//       const remove = document.createElement("button");
-//       remove.className = "cart-line-remove";
-//       remove.type = "button";
-//       remove.textContent = "Remove";
-//       remove.addEventListener("click", () => removeCartItem(item.id));
-
-//       line.append(title, meta, remove);
-//       return line;
-//     })
-//   );
-// }
-
-// function openEventModal(event) {
-//   state.selectedEvent = event;
-//   ticketQuantityNode.value = "1";
-//   document.querySelector("[data-event-title]").textContent = event.title;
-//   document.querySelector("[data-event-date]").textContent = event.date_range;
-//   document.querySelector("[data-event-description]").textContent = event.long_description || event.short_description;
-//   openModal(eventModal);
-// }
-
-// async function addEventToCart(eventId, quantity = 1) {
-//   state.cart = await apiFetch("/cart/", {
-//     method: "POST",
-//     body: JSON.stringify({ event_id: eventId, quantity })
-//   });
-//   renderCart();
-//   openModal(cartModal);
-// }
-
-// async function addStoreItemToCart(item, itemType) {
-//   state.cart = await apiFetch("/cart/", {
-//     method: "POST",
-//     body: JSON.stringify({
-//       item_type: itemType,
-//       item_name: item.title || item.name,
-//       amount: item.amount,
-//       quantity: 1
-//     })
-//   });
-//   renderCart();
-//   openModal(cartModal);
-// }
-
-// async function removeCartItem(itemId) {
-//   await apiFetch(`/cart/${itemId}/`, { method: "DELETE" });
-//   await loadCart();
-// }
-
-// function closeMobileNav() {
-//   mainNav.classList.remove("open");
-//   document.querySelector("[data-toggle-nav]").setAttribute("aria-expanded", "false");
-// }
-
-// function openInfoModal(infoKey) {
-//   const info = infoContent[infoKey];
-//   if (!info) {
-//     return;
-//   }
-//   document.querySelector("[data-info-title]").textContent = info.title;
-//   document.querySelector("[data-info-body]").textContent = info.body;
-//   openModal(infoModal);
-// }
-
-// document.querySelectorAll("[data-page]").forEach((button) => {
-//   button.addEventListener("click", () => {
-//     if (button.dataset.page) {
-//       loadPage(button.dataset.page);
-//     }
-//   });
-// });
-
-// document.querySelector("[data-open-cart]").addEventListener("click", async () => {
-//   await loadCart();
-//   openModal(cartModal);
-// });
-
-// document.querySelector("[data-open-login]").addEventListener("click", () => {
-//   openModal(loginModal);
-// });
-
-// document.querySelector("[data-clear-cart]").addEventListener("click", async () => {
-//   await apiFetch("/cart/clear/", { method: "DELETE" });
-//   await loadCart();
-// });
-
-// document.querySelector("[data-confirm-event]").addEventListener("click", async () => {
-//   if (!state.selectedEvent) {
-//     return;
-//   }
-//   const quantity = Math.max(1, Number.parseInt(ticketQuantityNode.value, 10) || 1);
-//   closeModal(eventModal);
-//   await addEventToCart(state.selectedEvent.id, quantity);
-// });
-
-// document.querySelector("[data-toggle-nav]").addEventListener("click", (event) => {
-//   const isOpen = mainNav.classList.toggle("open");
-//   event.currentTarget.setAttribute("aria-expanded", String(isOpen));
-// });
-
-// document.querySelectorAll("[data-info]").forEach((button) => {
-//   button.addEventListener("click", () => openInfoModal(button.dataset.info));
-// });
-
-// document.querySelectorAll("[data-close-modal]").forEach((button) => {
-//   button.addEventListener("click", () => closeModal(button.closest(".modal")));
-// });
-
-// await loadCart();
-// await loadPage("events");
-
-
 const API_BASE = "https://project-backend-yuym.onrender.com/api";
+
+// 🎯 STRIPE INSTANSTINI YARATISH
+const stripe = Stripe('pk_test_51TdQ7ZByzG8FU1HUGpp30AvDGx0C0m8CQnduTksoIRRFjNLqIDVNAn1tuGa9hslfvCFsdek7ON3paH5UGJIaPz6G00unulEy1M');
+let stripeElements = null;
 
 const pages = {
   events: {
@@ -361,7 +13,7 @@ const pages = {
   "gift-certificates": {
     title: "Gift Certificates",
     endpoint: "/gift-certificates/",
-    renderer: renderGiftCertificatesForm // Mana shu yerda eski kartochka funksiyasi almashtirildi
+    renderer: renderGiftCertificatesForm
   },
   "monthly-giving": {
     title: "Monthly Giving",
@@ -372,6 +24,12 @@ const pages = {
     title: "Donate Now",
     endpoint: "/donate-now/",
     renderer: (items) => renderStorePage("Donate Now", items, "Donate", "donation")
+  },
+  // 🎯 YANGI TO'LOV SAHIFASI YO'LAGI
+  "stripe-checkout": {
+    title: "Checkout",
+    endpoint: null,
+    renderer: renderStripeCheckoutPage
   }
 };
 
@@ -399,7 +57,7 @@ const infoContent = {
   },
   terms: {
     title: "Terms & Conditions",
-    body: "All ticket, gift certificate, monthly giving, and donation selections are saved to the cart for review. Payment is intentionally disabled in this local build."
+    body: "All ticket, gift certificate, monthly giving, and donation selections are saved to the cart for review. Payment is active through this Stripe local module."
   },
   email: {
     title: "Join Our Email List",
@@ -507,10 +165,9 @@ function renderStorePage(title, items, buttonLabel, itemType) {
   app.replaceChildren();
   app.append(heading(title));
 
-  // 1. FAQUAT MONTHLY GIVING SAHIFASI UCHUN ORIGINAL TEPALIK MATNLARI
   if (itemType === "monthly_giving") {
     const introDiv = document.createElement("div");
-    introDiv.className = "store-intro"; // Agar CSS-da bo'lsa yoki o'ziga xos padding berish uchun
+    introDiv.className = "store-intro";
     introDiv.style.marginBottom = "20px";
     introDiv.innerHTML = `
       <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #000;">Join the Lookingglass journey by making a bigger impact through recurring gifts!</h2>
@@ -532,18 +189,14 @@ function renderStorePage(title, items, buttonLabel, itemType) {
     const cardTitle = document.createElement("h2");
     cardTitle.textContent = item.title || item.name;
 
-    // Tavsif matni
     const description = document.createElement("p");
     description.textContent = item.description || "Support Lookingglass with a recurring gift!";
 
-    // Kontentlarni tartiblash uchun konteyner (Tugmalar va narxlar pastda tekis turishi uchun)
     const actionContainer = document.createElement("div");
-    actionContainer.className = "store-card-actions"; 
-    actionContainer.style.marginTop = "auto"; // Elementlarni pastga suradi
+    actionContainer.className = "store-card-actions";
+    actionContainer.style.marginTop = "auto";
 
-    // 2. SHARTLI TEKSHIRUV: MONTHLY GIVING YOKI STANDART SAHIFA
     if (itemType === "monthly_giving") {
-      // Membership Period: 1 month yozuvi
       const periodDiv = document.createElement("div");
       periodDiv.style.fontSize = "13px";
       periodDiv.style.fontWeight = "bold";
@@ -551,7 +204,6 @@ function renderStorePage(title, items, buttonLabel, itemType) {
       periodDiv.style.color = "#000";
       periodDiv.textContent = "Membership Period: 1 month";
 
-      // Narx yozuvi (Price: $XX.XX)
       const priceDiv = document.createElement("div");
       priceDiv.style.fontSize = "13px";
       priceDiv.style.fontWeight = "bold";
@@ -559,7 +211,6 @@ function renderStorePage(title, items, buttonLabel, itemType) {
       priceDiv.style.color = "#000";
       priceDiv.textContent = `Price: ${money.format(Number(item.amount))}`;
 
-      // Automatically Renew? Checkbox qismi
       const renewLabel = document.createElement("label");
       renewLabel.style.display = "flex";
       renewLabel.style.alignItems = "center";
@@ -576,17 +227,15 @@ function renderStorePage(title, items, buttonLabel, itemType) {
       checkbox.style.cursor = "pointer";
 
       renewLabel.append(checkbox, document.createTextNode("Automatically Renew?"));
-      
+
       actionContainer.append(periodDiv, priceDiv, renewLabel);
     } else {
-      // Standart holat (Masalan: Donate Now sahifasi bo'lsa, eski narx dizayni o'zgarmasdan qoladi)
       const price = document.createElement("div");
       price.className = "price";
       price.textContent = money.format(Number(item.amount));
       actionContainer.append(price);
     }
 
-    // Savatga qo'shish tugmasi (Loyihaning asl klassidan foydalanadi)
     const button = document.createElement("button");
     button.className = "primary";
     button.type = "button";
@@ -594,8 +243,6 @@ function renderStorePage(title, items, buttonLabel, itemType) {
     button.addEventListener("click", () => addStoreItemToCart(item, itemType));
 
     actionContainer.append(button);
-    
-    // Elementlarni kartochkaga tartib bilan qo'shish
     card.append(cardTitle, description, actionContainer);
     grid.append(card);
   });
@@ -603,7 +250,6 @@ function renderStorePage(title, items, buttonLabel, itemType) {
   app.append(grid);
 }
 
-// 🎯 SOVG'A VAUCHERI UCHUN ORIGINAL FORMANI XAVFSIZ GENERATSIYA QILISH
 function renderGiftCertificatesForm() {
   app.replaceChildren();
   app.append(heading("Gift Certificates"));
@@ -663,23 +309,21 @@ function renderGiftCertificatesForm() {
 
   app.append(wrapper);
 
-  // Dinamik radio button va email input boshqaruvi
   const sendTypeRadios = wrapper.querySelectorAll('input[name="v-send-type"]');
   const recipientEmailInput = wrapper.querySelector('#v-recipient-email');
   const voucherForm = wrapper.querySelector('#voucher-form');
 
   sendTypeRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
-        if (e.target.value === 'recipient') {
-            recipientEmailInput.style.display = 'inline-block';
-        } else {
-            recipientEmailInput.style.display = 'none';
-        }
+      if (e.target.value === 'recipient') {
+        recipientEmailInput.style.display = 'inline-block';
+      } else {
+        recipientEmailInput.style.display = 'none';
+      }
     });
   });
 
-  // Forma yuborilganda ishlash tizimi
-  voucherForm.addEventListener('submit', async function(e) {
+  voucherForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const amount = document.getElementById('v-amount').value;
@@ -693,7 +337,6 @@ function renderGiftCertificatesForm() {
     const errorDiv = document.getElementById('error-message');
     const errorDetails = document.getElementById('error-details');
 
-    // Asl saytdagi kabi qizil validatsiya xatolari
     let errors = [];
     if (!amount) errors.push("Amount required.");
     if (!toName) errors.push("Please enter who the voucher is to.");
@@ -701,50 +344,121 @@ function renderGiftCertificatesForm() {
     if (!fromName) errors.push("Please enter who the voucher is from.");
 
     if (errors.length > 0) {
-        errorDetails.innerHTML = errors.join('<br>');
-        errorDiv.style.display = 'block';
-        return;
+      errorDetails.innerHTML = errors.join('<br>');
+      errorDiv.style.display = 'block';
+      return;
     } else {
-        errorDiv.style.display = 'none';
+      errorDiv.style.display = 'none';
     }
 
     try {
-        const orderData = {
-            amount: amount,
-            date_to_send: dateToSend,
-            to_name: toName,
-            send_to_type: sendToType,
-            recipient_email: sendToType === 'recipient' ? recipientEmail : null,
-            from_name: fromName,
-            message: message
-        };
+      const orderData = {
+        amount: amount,
+        date_to_send: dateToSend,
+        to_name: toName,
+        send_to_type: sendToType,
+        recipient_email: sendToType === 'recipient' ? recipientEmail : null,
+        from_name: fromName,
+        message: message
+      };
 
-        // 1. Yangi modelimiz bo'yicha bazaga buyurtmani yozadi
-        await apiFetch('/gift-certificates/', {
-            method: 'POST',
-            body: JSON.stringify(orderData)
-        });
+      await apiFetch('/gift-certificates/', {
+        method: 'POST',
+        body: JSON.stringify(orderData)
+      });
 
-        // 2. Mavjud savatcha tizimiga (Cart) moslab umumiy hisobga qo'shadi
-        state.cart = await apiFetch("/cart/", {
-            method: "POST",
-            body: JSON.stringify({
-                item_type: "gift_certificate",
-                item_name: `Gift Voucher (To: ${toName})`,
-                amount: amount,
-                quantity: 1
-            })
-        });
+      state.cart = await apiFetch("/cart/", {
+        method: "POST",
+        body: JSON.stringify({
+          item_type: "gift_certificate",
+          item_name: `Gift Voucher (To: ${toName})`,
+          amount: amount,
+          quantity: 1
+        })
+      });
 
-        renderCart();
-        openModal(cartModal);
-        voucherForm.reset();
-        recipientEmailInput.style.display = 'none';
+      renderCart();
+      openModal(cartModal);
+      voucherForm.reset();
+      recipientEmailInput.style.display = 'none';
     } catch (error) {
-        console.error('Xatolik:', error);
-        alert("Xatolik yuz berdi. Backend ochiqligini tekshiring.");
+      console.error('Xatolik:', error);
+      alert("Xatolik yuz berdi. Backend ochiqligini tekshiring.");
     }
   });
+}
+
+// 🎯 DYNAMIC STRIPE TO'LOV SAHIFASINI CHIQARISH FUNKSIYASI
+async function renderStripeCheckoutPage() {
+  app.replaceChildren();
+  app.append(heading("Stripe Secure Payment"));
+
+  const container = document.createElement("div");
+  container.style.cssText = "max-width: 450px; margin: 40px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left;";
+  container.innerHTML = `
+    <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 15px; color: #222;">Secure Karta To'lovi</h2>
+    <div style="font-size: 16px; margin-bottom: 20px; color: #555;">Umumiy to'lov miqdori: <strong style="color:#000;">${money.format(Number(state.cart.total))}</strong></div>
+    
+    <form id="stripe-payment-form">
+      <div id="payment-element" style="margin-bottom: 20px;">
+        <div style="text-align:center; color:#666;" class="animate-pulse">Stripe xavfsiz tizimi yuklanmoqda...</div>
+      </div>
+      <button id="stripe-pay-button" style="width:100%; background:#1d4ed8; color:white; font-weight:600; padding:12px; border:none; border-radius:8px; cursor:pointer;" disabled>
+        Hozir To'lash
+      </button>
+      <div id="stripe-error-message" style="color:red; margin-top:12px; font-size:14px; text-align:center; display:none;"></div>
+    </form>
+  `;
+  app.append(container);
+
+  try {
+    // 1. Django backendimizdan clientSecret so'raymiz
+    const response = await fetch('http://127.0.0.1:8000/api/gift-certificates/create-payment-intent/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: state.cart.total })
+    });
+
+    const data = await response.json();
+    if (!data.clientSecret) throw new Error("Client secret topilmadi");
+
+    // 2. Stripe elementlarini formaga joylashtiramiz
+    stripeElements = stripe.elements({ clientSecret: data.clientSecret });
+    const paymentElement = stripeElements.create('payment');
+    const paymentFormNode = document.getElementById('payment-element');
+    paymentFormNode.innerHTML = "";
+    paymentElement.mount('#payment-element');
+
+    const payBtn = document.getElementById('stripe-pay-button');
+    payBtn.disabled = false;
+
+    // 3. To'lov tugmasi bosilganda
+    document.getElementById('stripe-payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      payBtn.disabled = true;
+      payBtn.innerText = "To'lov tekshirilmoqda...";
+
+      const { error } = await stripe.confirmPayment({
+        elements: stripeElements,
+        confirmParams: {
+          // 🎯 Bosh sahifadagi index.html fayliga to'g'ri yo'naltiramiz:
+          return_url: `${window.location.origin}/frontend/index.html`,
+        },
+      });
+
+      if (error) {
+        const errNode = document.getElementById('stripe-error-message');
+        errNode.textContent = error.message;
+        errNode.style.display = "block";
+        payBtn.disabled = false;
+        payBtn.innerText = "Hozir To'lash";
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('payment-element').innerHTML = "<div style='color:red; text-align:center;'>To'lov tizimini yuklashda xatolik. Backendni tekshiring.</div>";
+  }
 }
 
 async function loadPage(page) {
@@ -754,8 +468,12 @@ async function loadPage(page) {
 
   try {
     const config = pages[page];
-    const data = await apiFetch(config.endpoint);
-    config.renderer(data);
+    if (config.endpoint) {
+      const data = await apiFetch(config.endpoint);
+      config.renderer(data);
+    } else {
+      config.renderer(); // Endpoint bo'lmagan sahifalar uchun (Stripe Checkout kabi)
+    }
     app.focus();
   } catch (error) {
     app.innerHTML = '<section class="error-state">Could not load this page. Please make sure the backend is running.</section>';
@@ -802,6 +520,17 @@ function renderCart() {
       return line;
     })
   );
+
+  // 🎯 SAVATCHA (CART) ICHIGA "PROCEED TO CHECKOUT" TUGMASINI QO'SHISH
+  const checkoutBtn = document.createElement("button");
+  checkoutBtn.className = "primary";
+  checkoutBtn.style.cssText = "width:100%; margin-top:15px; background-color:#22c55e; color:white; font-weight:bold; padding:10px; border:none; cursor:pointer;";
+  checkoutBtn.textContent = "PROCEED TO CHECKOUT";
+  checkoutBtn.addEventListener("click", () => {
+    closeModal(cartModal);
+    loadPage("stripe-checkout");
+  });
+  cartItemsNode.append(checkoutBtn);
 }
 
 function openEventModal(event) {
@@ -900,5 +629,8 @@ document.querySelectorAll("[data-close-modal]").forEach((button) => {
   button.addEventListener("click", () => closeModal(button.closest(".modal")));
 });
 
-await loadCart();
-await loadPage("events");
+// Loyihani dastlabki yuklash qismi
+(async function initApp() {
+  await loadCart();
+  await loadPage("events");
+})();
