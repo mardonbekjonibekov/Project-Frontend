@@ -1,4 +1,4 @@
-const API_BASE = "https://project-backend-yuyn.onrender.com/api";
+const API_BASE = "https://project-backend-yuym.onrender.com/api";
 
 // 🎯 STRIPE INSTANSTINI YARATISH
 const stripe = Stripe('pk_test_51TdQ7ZByzG8FU1HUGpp30AvDGx0C0m8CQnduTksoIRRFjNLqIDVNAn1tuGa9hslfvCFsdek7ON3paH5UGJIaPz6G00unulEy1M');
