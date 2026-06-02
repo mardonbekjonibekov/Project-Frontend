@@ -442,7 +442,7 @@ async function renderStripeCheckoutPage() {
         elements: stripeElements,
         confirmParams: {
           // 🎯 Bosh sahifadagi index.html fayliga to'g'ri yo'naltiramiz:
-          return_url: `${window.location.origin}/frontend/index.html`,
+          return_url: `${window.location.origin}`,
         },
       });
 
