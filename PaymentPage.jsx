@@ -11,7 +11,7 @@ export default function PaymentPage() {
 
   useEffect(() => {
     // Django backendimizga to'lov niyatini yaratish uchun so'rov yuboramiz
-    fetch('http://127.0.0.1:8000/api/gift-certificates/create-payment-intent/', {
+    fetch('https://project-backend-yuym.onrender.com/api/gift-certificates/create-payment-intent/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: paymentAmount }),

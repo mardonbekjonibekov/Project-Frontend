@@ -1,4 +1,4 @@
-const API_BASE = "https://project-backend-yuym.onrender.com/api";
+const API_BASE = "https://project-backend-yuyn.onrender.com/api";
 
 // 🎯 STRIPE INSTANSTINI YARATISH
 const stripe = Stripe('pk_test_51TdQ7ZByzG8FU1HUGpp30AvDGx0C0m8CQnduTksoIRRFjNLqIDVNAn1tuGa9hslfvCFsdek7ON3paH5UGJIaPz6G00unulEy1M');
@@ -413,7 +413,7 @@ async function renderStripeCheckoutPage() {
 
   try {
     // 1. Django backendimizdan clientSecret so'raymiz
-    const response = await fetch('http://127.0.0.1:8000/api/gift-certificates/create-payment-intent/', {
+    const response = await fetch('https://project-backend-yuym.onrender.com/api/gift-certificates/create-payment-intent/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: state.cart.total })
